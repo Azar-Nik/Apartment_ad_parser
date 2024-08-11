@@ -1,7 +1,5 @@
 import requests
 from datetime import datetime
-from time import sleep
-from realry import check_database
 
 
 def get_json():
@@ -99,8 +97,6 @@ def get_json():
 def get_offer(item):
     offer = {}
     offer['offer_id'] = item['id']
-    offer['price'] = item["bargainTerms"]["priceRur"]
-    offer['title'] = item["formattedFullInfo"]
     offer['url'] = item["fullUrl"]
     timestamp = datetime.fromtimestamp(item["addedTimestamp"])
     timestamp = datetime.strftime(timestamp, '%d.%m.%Y в %H:%M')
@@ -109,17 +105,17 @@ def get_offer(item):
 
 
 def get_offers(data):
+    results = []
     for item in data["data"]["offersSerialized"]:
         offer = get_offer(item)
-        check_database(offer)
+        results.append(offer)
+    return results
 
 
 def main():
     data = get_json()
-    get_offers(data)
+    return get_offers(data)
 
 
 if __name__ == "__main__":
-    while True:
-        main()
-        sleep(60)
+    main()

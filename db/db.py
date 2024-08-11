@@ -2,13 +2,13 @@ import sqlite3
 
 
 def main():
-    conn = sqlite3.connect('realty.db')
+    conn = sqlite3.connect('db\\realty.db')
     cursor = conn.cursor()
     
     cursor.execute('''
-        CREATE TABLE offers (
+        CREATE TABLE chat_id (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            offer_id INTEGER
+            chat_id INTEGER
         )
     ''')
     conn.close()

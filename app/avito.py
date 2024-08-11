@@ -1,12 +1,6 @@
 # Без прокси не работает, сразу банят.
-# JSON файл через мобильную версию
-# Нужно настроить get_offer и get_offers
-
 import requests
 from datetime import datetime
-from time import sleep
-#import json
-from realry import check_database
 
 
 def get_json():
@@ -56,9 +50,9 @@ def get_json():
 def get_offer(item):
     offer = {}
     offer['offer_id'] = item['id']
-    offer['price'] = item["price"]
-    offer['title'] = ''
-    offer['url'] = 'https://www.avito.ru' + item["uri_mweb"]
+    offer['price'] = item["price"]["current"]
+    offer['title'] = item["title"]
+    offer['url'] = 'https://www.avito.ru' + item["uri"]
     timestamp = datetime.fromtimestamp(item["time"])
     timestamp = datetime.strftime(timestamp, '%d.%m.%Y в %H:%M')
     offer['offer_date'] = timestamp
@@ -66,18 +60,18 @@ def get_offer(item):
 
 
 def get_offers(data):
+    results = []
     for item in data["result"]["items"]:
         if 'item' in item['type']:
             offer = get_offer(item['value'])
-            check_database(offer)
+            results.append(offer)
+    return results
 
 
 def main():
     data = get_json()
-    get_offers(data)
+    return get_offers(data)
 
 
 if __name__ == "__main__":
-    while True:
-        main()
-        sleep(60)
+    main()
